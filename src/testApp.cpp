@@ -6,13 +6,14 @@
 void testApp::setup(){
     
     
-    PathMaker* mBoard = new PathMaker( 64 );
-    mBoard->solveWithBackTracking(30, 30, SOUTH);
+    mBoard = new PathMaker( 12 );
+    mBoard->solveWithBackTracking(5, 5, SOUTH);
     
-    drawPath.clear();
+    //drawPath.clear();
 
     for(int i =0; i< mBoard->savePath().size(); i++){
-        drawPath.addVertex(mBoard->savePath().at(i));
+        //drawPath.addVertex(mBoard->savePath().at(i));
+        ofRect(mBoard->savePath().at(i), 10, 10);
     }
 }
 
@@ -28,6 +29,7 @@ void testApp::update(){
 void testApp::draw(){
     
     drawPath.draw();
+    
 }
 
 

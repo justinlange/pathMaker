@@ -23,6 +23,10 @@ class testApp : public ofBaseApp{
     
         ofPolyline drawPath;
     
+        //vector<ofRect>
+    
+    PathMaker* mBoard;
+    
     
 		
 };

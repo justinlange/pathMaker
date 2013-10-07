@@ -23,9 +23,14 @@ public:
     bool solveWithBackTracking(int x, int y, int direction);
     vector<ofPoint> savePath();
     
+    int newDir(int td);
+    
+    void drawToText();
+    
     
     //vector<ofPoints> path;
     
+    int         lineReps;
     int         dist;
     int         bigDist;
     int			mTilesPerAxis;
