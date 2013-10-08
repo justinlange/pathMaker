@@ -6,7 +6,7 @@
 void testApp::setup(){
     
     
-    mBoard = new PathMaker( 16 );
+    mBoard = new PathMaker( 12 );
     mBoard->solveWithBackTracking(2, 5, EAST);
     
     //drawPath.clear();

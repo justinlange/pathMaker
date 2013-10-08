@@ -10,7 +10,7 @@
 #include "PathMaker.h"
 
 PathMaker::PathMaker(int iTilesPerAxis)
-: mTilesPerAxis(iTilesPerAxis), mSolutionCount(0), mTotalCallCount(0), mTempCallCount(0), dist(1), squareSize(10), bigDist(1), lineReps(20)
+: mTilesPerAxis(iTilesPerAxis), mSolutionCount(0), mTotalCallCount(0), mTempCallCount(0), dist(0), squareSize(10), bigDist(1), lineReps(5)
 {
 	mBoard = new bool*[mTilesPerAxis];
 	for(int i = 0; i < mTilesPerAxis; i++) {
@@ -68,11 +68,11 @@ bool PathMaker::solveWithBackTracking(int x, int y, int _d)
         
         
         
-        mTempCallCount = 0;
+        if(mTempCallCount > lineReps) d = newDir(d);
         
         //cout << "total calls: " << mTotalCallCount << endl;
         
-        if(mTotalCallCount > 90000) return true;
+        if(mTotalCallCount >= (mTilesPerAxis-1) * (mTilesPerAxis-1)) return true;
         
         //if(checkForAllSolutions()) return true;
         
@@ -80,7 +80,8 @@ bool PathMaker::solveWithBackTracking(int x, int y, int _d)
         
         //----< add a point to a line
 
-        
+        drawToText();
+
         if (success){
             mBoard[newX][newY] = true;
         }
@@ -90,7 +91,6 @@ bool PathMaker::solveWithBackTracking(int x, int y, int _d)
     }
     
 
-    drawToText();
 
 
 }
@@ -161,60 +161,3 @@ bool PathMaker::checkForAllSolutions(){
     
     return false;
 }
-
-
-/*
- switch ( d )
- {
- case SOUTH:
- if (!mBoard[x+dist][y+dist] && !mBoard[x+dist][y] && !mBoard[x-dist][y+dist]) mBoard[x][y] = true;
- sCt++;
- //cout << "south call count: " << sCt << endl;
- if(sCt > lineReps){
- sCt = 0;
- d = newDir(d);
- }else{
- y++;
- }
- solveWithBackTracking(x, y, d );
- break;
- case EAST:
- if (!mBoard[x][y+dist] && !mBoard[x-dist][y] && !mBoard[x-dist][y-dist]) mBoard[x][y] = true;
- eCt++;
- if(eCt > lineReps){
- sCt = 0;
- d = newDir(d);
- }else{
- x++;
- }
- //cout << "east call count: " << eCt << endl;
- solveWithBackTracking(x, y, d);
- break;
- 
- case WEST:
- if (!mBoard[x][y+dist] && !mBoard[x+dist][y] && !mBoard[x][y-dist]) mBoard[x][y] = true;
- wCt++;
- if(wCt > lineReps){
- sCt = 0;
- d = newDir(d);
- }else{
- x--;
- }
- //cout << "west call count: " << wCt << endl;
- solveWithBackTracking(x, y, d);
- break;
- 
- case NORTH:
- if (!mBoard[x][y+dist] && !mBoard[x-dist][y] && !mBoard[x+dist][y]) mBoard[x][y] = true;
- nCt++;
- if(nCt > lineReps){
- sCt = 0;
- d = newDir(d);
- }else{
- y--;
- }
- //cout << "west call count: " << wCt << endl;
- solveWithBackTracking(x, y, d);
- break;
- }
-*/
