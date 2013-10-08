@@ -10,7 +10,7 @@
 #include "PathMaker.h"
 
 PathMaker::PathMaker(int iTilesPerAxis)
-: mTilesPerAxis(iTilesPerAxis), mSolutionCount(0), mTotalCallCount(0), mTempCallCount(0), dist(0), squareSize(10), bigDist(1), lineReps(5)
+: mTilesPerAxis(iTilesPerAxis), mSolutionCount(0), mTotalCallCount(0), mTempCallCount(0), dist(0), squareSize(10), mTilesFilled(0), lineReps(5), mMult(10)
 {
 	mBoard = new bool*[mTilesPerAxis];
 	for(int i = 0; i < mTilesPerAxis; i++) {
@@ -72,7 +72,7 @@ bool PathMaker::solveWithBackTracking(int x, int y, int _d)
         
         //cout << "total calls: " << mTotalCallCount << endl;
         
-        if(mTotalCallCount >= (mTilesPerAxis-1) * (mTilesPerAxis-1)) return true;
+        if(mTotalCallCount >= mTilesPerAxis * mTilesPerAxis) return true;
         
         //if(checkForAllSolutions()) return true;
         
@@ -84,6 +84,8 @@ bool PathMaker::solveWithBackTracking(int x, int y, int _d)
 
         if (success){
             mBoard[newX][newY] = true;
+            mLine.addVertex(newX*mMult, newY*mMult);
+            mTilesFilled++;
         }
         
         if (!success) d = newDir(d);
@@ -120,6 +122,12 @@ int PathMaker::newDir(int td)
         nd = (rand()  % 4 ) + 1;
     }
     return nd;
+}
+
+
+ofPolyline PathMaker::returnPolyline(){
+    return mLine;
+    
 }
 
 

@@ -7,7 +7,6 @@ void testApp::setup(){
     
     
     mBoard = new PathMaker( 12 );
-    mBoard->solveWithBackTracking(2, 5, EAST);
     
     //drawPath.clear();
 
@@ -31,10 +30,17 @@ void testApp::draw(){
     //drawPath.draw();
     
     
+    mBoard->solveWithBackTracking(2, 5, EAST);
+
+    mBoard->returnPolyline().draw();
+    
+
+    /*
     for(int i =0; i< mBoard->savePath().size(); i++){
         //drawPath.addVertex(mBoard->savePath().at(i));
         ofRect(mBoard->savePath().at(i), 1, 1);
     }
+     */
   
     
 }

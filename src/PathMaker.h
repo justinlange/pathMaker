@@ -27,10 +27,14 @@ public:
     
     void drawToText();
     bool checkForAllSolutions();
+    ofPolyline  returnPolyline();
     
     
-    //vector<ofPoints> path;
+    vector<ofPoint> path;
     
+    ofPolyline      mLine;
+    
+    int         mMult;
     int         lineReps;
     int         dist;
     int         bigDist;
@@ -42,6 +46,7 @@ public:
     int         eCt,wCt,nCt,sCt;
     int         squareSize;
     int         direction;
+    int         mTilesFilled;
     
     
 };
