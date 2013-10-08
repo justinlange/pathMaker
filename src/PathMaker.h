@@ -26,6 +26,7 @@ public:
     int newDir(int td);
     
     void drawToText();
+    bool checkForAllSolutions();
     
     
     //vector<ofPoints> path;

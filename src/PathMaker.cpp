@@ -37,60 +37,17 @@ bool PathMaker::solveWithBackTracking(int x, int y, int _d)
 
     
     int d = _d;
-    
-    
-    
-    
-    //d = (rand() % 4) + 1;
-   
-    //cout << "random has been called and d is: " << d << "total count: " << mTotalCallCount << endl;
-    
 
-    
-    
-    
-    //take x and y
-    
-    //finally, if global counter is max, return true;
-    
-    
-  /*
-    int successCheck = 0;
-    
-    for(int i = 0; i < mTilesPerAxis; i++) {
-        for(int j = 0; j < mTilesPerAxis; j++) {
-            if (mBoard[i][j] == true) {
-                successCheck++;
-            }
-            if (successCheck >= ((mTilesPerAxis*mTilesPerAxis) - 15)){
-                cout << "we have found all solutions" << endl;
-                return true;
-            }
-        }
-    }
- */
-
-    
-    // if position is outside of grid, return false
 
     if(x >= mTilesPerAxis - dist || x <= dist || y >= mTilesPerAxis - dist|| y <= dist) {
         return false;
     }
     
-    /*
-      int offset = rand() % 4;
-      int index = 0;
-      index++;
-     */
     
     int newX, newY;
 
     
     while (1) {
-    
-
-        //int current = ((offset + index) % 4) + 1;
-        
         
         switch (d)
         {
@@ -117,26 +74,23 @@ bool PathMaker::solveWithBackTracking(int x, int y, int _d)
         
         if(mTotalCallCount > 90000) return true;
         
+        //if(checkForAllSolutions()) return true;
+        
         bool success = solveWithBackTracking(newX, newY , d);
         
         //----< add a point to a line
 
-            drawToText();
         
         if (success){
             mBoard[newX][newY] = true;
-            return true;
         }
         
         if (!success) d = newDir(d);
         
-        
-
-        //return false;
-        
     }
     
 
+    drawToText();
 
 
 }
@@ -185,6 +139,27 @@ vector<ofPoint> PathMaker::savePath()
     }
     return myPath;
     
+}
+
+
+bool PathMaker::checkForAllSolutions(){
+    
+     int successCheck = 0;
+     
+     for(int i = 0; i < mTilesPerAxis-1; i++) {
+         for(int j = 0; j < mTilesPerAxis-1; j++) {
+            if (mBoard[i][j] == true) {
+                successCheck++;
+            }
+             if (successCheck >= ((mTilesPerAxis*mTilesPerAxis) - 15)){
+                 cout << "we have found all solutions" << endl;
+                 return true;
+             }
+             
+         }
+     }
+    
+    return false;
 }
 
 
