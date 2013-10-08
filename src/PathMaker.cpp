@@ -54,7 +54,7 @@ bool PathMaker::solveWithBackTracking(int x, int y, int _d)
     //finally, if global counter is max, return true;
     
     
-    
+  /*
     int successCheck = 0;
     
     for(int i = 0; i < mTilesPerAxis; i++) {
@@ -62,25 +62,28 @@ bool PathMaker::solveWithBackTracking(int x, int y, int _d)
             if (mBoard[i][j] == true) {
                 successCheck++;
             }
-            if (successCheck >= (mTilesPerAxis*mTilesPerAxis)){
+            if (successCheck >= ((mTilesPerAxis*mTilesPerAxis) - 15)){
                 cout << "we have found all solutions" << endl;
                 return true;
             }
         }
     }
+ */
 
     
     // if position is outside of grid, return false
+
     if(x >= mTilesPerAxis - dist || x <= dist || y >= mTilesPerAxis - dist|| y <= dist) {
         return false;
     }
-
     
+    /*
+      int offset = rand() % 4;
+      int index = 0;
+      index++;
+     */
     
-//    int offset = rand() % 4;
-//    int index = 0;
-      int newX, newY;
-//    index++;
+    int newX, newY;
 
     
     while (1) {
@@ -107,21 +110,29 @@ bool PathMaker::solveWithBackTracking(int x, int y, int _d)
         }
         
         
-        bool success = solveWithBackTracking(newX, newY , d);
-        if (success) return true;
         
+        mTempCallCount = 0;
+        
+        //cout << "total calls: " << mTotalCallCount << endl;
+        
+        if(mTotalCallCount > 90000) return true;
+        
+        bool success = solveWithBackTracking(newX, newY , d);
+        
+        //----< add a point to a line
+
+            drawToText();
+        
+        if (success){
+            mBoard[newX][newY] = true;
+            return true;
+        }
         
         if (!success) d = newDir(d);
         
         
-        mBoard[newX][newY] = true;
-        mTempCallCount = 0;
-        solveWithBackTracking(newX, newY, d);
-        
-        //cout << "draw to text" << endl;
-        
-        drawToText();
-        return false;
+
+        //return false;
         
     }
     
@@ -137,6 +148,7 @@ void PathMaker::drawToText(){
     for(int i = 0; i < mTilesPerAxis; i++) {
 		for(int j = 0; j < mTilesPerAxis; j++) {
             cout << mBoard[i][j];
+            
 		}
         cout << endl;
 	}
@@ -150,11 +162,10 @@ int PathMaker::newDir(int td)
 {
     int nd = (rand() % 4) + 1;
     
-    if(nd != td) {
-      return nd;
-    }else{
-        return ((td + 1) % 4) + 1;
+    while(nd == td) {
+        nd = (rand()  % 4 ) + 1;
     }
+    return nd;
 }
 
 
