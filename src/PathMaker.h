@@ -11,7 +11,7 @@
 
 #include "ofMain.h"
 
-enum directions { NONE, NORTH = 1, EAST = 2, SOUTH = 3, WEST = 4 };
+enum directions { NONE, NORTH = 1, SOUTH = 2, EAST = 3, WEST = 4 };
 class PathMaker {
     
     
@@ -21,13 +21,22 @@ public:
     ~PathMaker();
     
     bool solveWithBackTracking(int x, int y, int direction);
-    vector<ofPoint> savePath();
+    void callSolver();
+    
+    vector<ofPoint> savePathAsPoints();
+    
+    vector<ofPoint> makeVector(int x, int y);
+    vector<ofPoint> myVector;
+    
     
     int newDir(int td);
     
     void drawToText();
     bool checkForAllSolutions();
     ofPolyline  returnPolyline();
+    
+    int returnX();
+    int returnY();
     
     
     vector<ofPoint> path;
@@ -36,7 +45,7 @@ public:
     
     int         mMult;
     int         lineReps;
-    int         dist;
+    int         margin;
     int         bigDist;
     int			mTilesPerAxis;
     bool**		mBoard;
@@ -47,6 +56,7 @@ public:
     int         squareSize;
     int         direction;
     int         mTilesFilled;
+
     
     
 };

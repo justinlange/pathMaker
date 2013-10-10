@@ -6,14 +6,18 @@
 void testApp::setup(){
     
     
-    mBoard = new PathMaker( 12 );
+    mBoard = new PathMaker( 5 );
+    
+    mBoard->callSolver();
+    
+
     
     //drawPath.clear();
 
-    for(int i =0; i< mBoard->savePath().size(); i++){
+    //for(int i =0; i< mBoard->savePath().size(); i++){
         //drawPath.addVertex(mBoard->savePath().at(i));
         //ofRect(mBoard->savePath().at(i), 10, 10);
-    }
+    //}
 }
 
 
@@ -29,23 +33,37 @@ void testApp::draw(){
     
     //drawPath.draw();
     
-    
-    mBoard->solveWithBackTracking(2, 5, EAST);
+    //mBoard->solveWithBackTracking(5, 5, EAST);
 
+    
+    
+    // draws polyLine
     mBoard->returnPolyline().draw();
-    
 
+
+    //if(mBoard->solveWithBackTracking(5, 5, EAST));
+    //mBoard->mTotalCallCount = 0;
+    
     /*
-    for(int i =0; i< mBoard->savePath().size(); i++){
-        //drawPath.addVertex(mBoard->savePath().at(i));
-        ofRect(mBoard->savePath().at(i), 1, 1);
+  
+    for(int i= 0; i<mBoard->myVector.size(); i++){
+        ofPolyline newLine;
+        newLine.addVertex(mBoard->myVector.at(i));
+        newLine.draw();
     }
      */
-  
+    
+    
+    
+      //draws points
+   // for(int i =0; i< mBoard->savePathAsPoints().size(); i++){
+   //     ofRect(mBoard->savePathAsPoints().at(i), 1, 1);
+   // }
+    
+     
+
     
 }
-
-
 
 
 //--------------------------------------------------------------

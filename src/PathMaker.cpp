@@ -10,7 +10,7 @@
 #include "PathMaker.h"
 
 PathMaker::PathMaker(int iTilesPerAxis)
-: mTilesPerAxis(iTilesPerAxis), mSolutionCount(0), mTotalCallCount(0), mTempCallCount(0), dist(0), squareSize(10), mTilesFilled(0), lineReps(5), mMult(10)
+: mTilesPerAxis(iTilesPerAxis), mSolutionCount(0), mTotalCallCount(0), mTempCallCount(0), margin(2), squareSize(10), mTilesFilled(0), lineReps(5), mMult(10)
 {
 	mBoard = new bool*[mTilesPerAxis];
 	for(int i = 0; i < mTilesPerAxis; i++) {
@@ -19,6 +19,8 @@ PathMaker::PathMaker(int iTilesPerAxis)
 			mBoard[i][j] = false;
 		}
 	}
+
+    vector<ofPoint> myVector;
 }
 
 
@@ -28,74 +30,88 @@ PathMaker::~PathMaker()
     
 }
 
+void PathMaker::callSolver(){
+    solveWithBackTracking(3, 3, SOUTH);
+    
+}
 
-bool PathMaker::solveWithBackTracking(int x, int y, int _d)
+
+bool PathMaker::solveWithBackTracking(int x, int y, int d)
 {
+    
+    bool success = true;
     
     mTempCallCount++;
     mTotalCallCount++;
 
+    drawToText();
+
     
-    int d = _d;
+    if(mTilesFilled >= (mTilesPerAxis-margin)*(mTilesPerAxis-margin)){
+        return true;
+    }
+    
 
-
-    if(x >= mTilesPerAxis - dist || x <= dist || y >= mTilesPerAxis - dist|| y <= dist) {
+    if(x >= mTilesPerAxis - margin || x <= margin || y >= mTilesPerAxis - margin|| y <= margin) {
         return false;
     }
     
-    
-    int newX, newY;
+        
 
-    
-    while (1) {
-        
-        switch (d)
-        {
-            case SOUTH:
-                newX = x; newY = y+1;
-                break;
-            case NORTH:
-                newX = x; newY = y-1;
-                break;
-            case EAST:
-                newX = x+1; newY = y;
-                break;
-            case WEST:
-                newX = x-1; newY = y;
-                break;
-
-        }
-        
-        
-        
-        if(mTempCallCount > lineReps) d = newDir(d);
-        
-        //cout << "total calls: " << mTotalCallCount << endl;
-        
-        if(mTotalCallCount >= mTilesPerAxis * mTilesPerAxis) return true;
-        
-        //if(checkForAllSolutions()) return true;
-        
-        bool success = solveWithBackTracking(newX, newY , d);
-        
-        //----< add a point to a line
-
-        drawToText();
-
-        if (success){
-            mBoard[newX][newY] = true;
-            mLine.addVertex(newX*mMult, newY*mMult);
+        if(!mBoard[x-1][y]){
+            mBoard[x][y] = true;
             mTilesFilled++;
+            solveWithBackTracking(x-1, y , d);
+        }
+        else if(!mBoard[x+1][y]){
+            mBoard[x][y] = true;
+            mTilesFilled++;
+            solveWithBackTracking(x+1, y , d);
+        }
+        else if(!mBoard[x][y-1]){
+            mBoard[x][y] = true;
+            mTilesFilled++;
+            solveWithBackTracking(x, y-1 , d);
+        }
+        else if(!mBoard[x][y+1]){
+            mBoard[x][y] = true;
+            mTilesFilled++;
+            solveWithBackTracking(x, y+1 , d);
+        }else{
+            if(mBoard[x][y] == true){
+                mBoard[x][y] = false;
+                mTilesFilled--;
+            }
+            
+            
+            return false;
         }
         
-        if (!success) d = newDir(d);
         
-    }
+        
+        mLine.addVertex(x*mMult, y*mMult);
+    
+        //check neighbors, if none avail ;
+        // else if avail
+        //else if
+        //else current tile == false;
+        
+        
+        
+        
+        //solveWithBackTracking(newX, newY , d);
+        
+//        if (!success){
+//            mBoard[newX][newY] = false;
+//            d = newDir(d);
+//        }
+    
     
 
-
+    //return true;
 
 }
+
 
 void PathMaker::drawToText(){
     
@@ -104,10 +120,12 @@ void PathMaker::drawToText(){
     for(int i = 0; i < mTilesPerAxis; i++) {
 		for(int j = 0; j < mTilesPerAxis; j++) {
             cout << mBoard[i][j];
-            
 		}
         cout << endl;
 	}
+    
+    cout << "total calls: " << mTotalCallCount << " tiles filled: " << mTilesFilled << endl;
+
     
     
     
@@ -116,12 +134,30 @@ void PathMaker::drawToText(){
 
 int PathMaker::newDir(int td)
 {
-    int nd = (rand() % 4) + 1;
+     int nd = (rand() % 4) + 1;
     
-    while(nd == td) {
-        nd = (rand()  % 4 ) + 1;
-    }
-    return nd;
+    switch( td ){
+        case NORTH:
+            while(nd == td || nd == SOUTH) {
+                nd = (rand()  % 4 ) + 1;
+                return nd;
+            }
+        case SOUTH:
+            while(nd == td || nd == NORTH) {
+                nd = (rand()  % 4 ) + 1;
+                return nd;
+            }
+        case EAST:
+            while(nd == td || nd == WEST) {
+                nd = (rand()  % 4 ) + 1;
+                return nd;
+            }
+        case WEST:
+            while(nd == td || nd == EAST) {
+                nd = (rand()  % 4 ) + 1;
+                return nd;
+            }
+        }
 }
 
 
@@ -131,7 +167,17 @@ ofPolyline PathMaker::returnPolyline(){
 }
 
 
-vector<ofPoint> PathMaker::savePath()
+vector<ofPoint> PathMaker::makeVector(int x, int y){
+    myVector.push_back(ofPoint(x,y));
+    
+    
+}
+
+
+
+
+
+vector<ofPoint> PathMaker::savePathAsPoints()
 {
     vector<ofPoint> myPath;
     
